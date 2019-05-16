@@ -1,0 +1,2 @@
+# papaProject
+My Father is a share Broker. He told me that at the end of the day he maintains an excel sheet which records all the trading that has been occurred for each particular client. In that brokerage and net, Sums should be manually calculated and can have some human error. Also, the work is very tiresome. So I am making a website using HTML, CSS, Bootstrap, JavaScript, JQuery which will automatically calculate all data and then create a spreadsheet for brokers such as my father.
