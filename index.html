@@ -1,0 +1,310 @@
+<html>
+<head>
+	<!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+
+	
+	<script>
+		var p_date="";
+		var s_date="";
+	</script>
+	
+	<title>Mahesh Nagadia</title>
+</head>
+
+<body>
+	
+	<div class="container">
+	<div style="margin-top:2.5%">
+	  <div class="row">
+		<div class="col-sm">
+		  <select class="custom-select" id="script">
+			<option selected>Script</option>
+			<option value="ACC">ACC</option>
+			<option value="BNF">BNF</option>
+		  </select>
+		</div>
+		<div class="col-sm">
+		  Brokerage  : <input type="text" id="brokerage" />
+		</div>
+	  </div>
+	</div>
+	
+	<hr>
+	
+	<div style="margin-top:1.5%">
+		<div class="row">
+			<h3>Purchase : </h3>
+		</div>
+	</div>
+	
+	<div style="margin-top:0.5%">
+	  <div class="row">
+		<div class="col-sm">
+		  Date : <input type="date" id="p_date" />
+		</div>
+		<div class="col-sm">
+		  Rate : <input type="text" id="p_rate" />
+		</div>
+		<div class="col-sm">
+		  Quantity : <input type="text" id="p_qty" />
+		</div>
+	  </div>
+	</div>
+	
+	<hr>
+	
+	<div style="margin-top:1.5%">
+		<div class="row">
+			<h3>Sell : </h3>
+		</div>
+	</div>
+	
+	<div style="margin-top:0.5%">
+	  <div class="row">
+		<div class="col-sm">
+		  Date : <input type="date" id="s_date" />
+		</div>
+		<div class="col-sm">
+		  Rate : <input type="text" id="s_rate" />
+		</div>
+		<div class="col-sm">
+		  Quantity : <input type="text" id="s_qty" />
+		</div>
+	  </div>
+	</div>
+	
+	<hr>
+	
+	<div style="margin-top:1.5%">
+		<div class="row" >
+			<div class="col-sm"> 
+				<center><button  class="btn btn-primary" onClick="myFunction()" style="width:10%">ADD</button></center>
+			</div>
+		</div>
+	</div>
+		
+	<div class="table-responsive" style="margin-bottom:2.5%">
+		<table class="table table-sm" id="myTable" style="margin-top:2.5%" id="myTable">
+			<thead>
+				<tr>
+					<th onclick="sortTable(0)">Script</th>
+					<th onclick="sortTable(1)" class="table-danger">Date</th>
+					<th onclick="sortTable(2)" class="table-danger">Quantity</th>
+					<th onclick="sortTable(3)" class="table-danger">Rate</th>
+					<th onclick="sortTable(4)" class="table-danger">Brokerage</th>
+					<th onclick="sortTable(5)" class="table-danger">Net Rate</th>
+					<th onclick="sortTable(6)" class="table-danger">Sums</th>
+					<th onclick="sortTable(7)" class="table-success">Date</th>
+					<th onclick="sortTable(8)" class="table-success">Quantity</th>
+					<th onclick="sortTable(9)" class="table-success">Rate</th>
+					<th onclick="sortTable(10)" class="table-success">Brokerage</th>
+					<th onclick="sortTable(11)" class="table-success">Net Rate</th>
+					<th onclick="sortTable(12)" class="table-success">Sums</th>
+					<th onclick="sortTable(13)">Net Sums</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+		
+	<div style="margin-top:1.5%; margin-bottom:2.5%">
+		<div class="row" >
+			<div class="col-sm"> 
+				<center><button class="btn btn-primary" onclick="exportTableToExcel('myTable')">Export Table Data To Excel File</button></center>
+			</div>
+		</div>
+	</div>
+		
+	</div>
+	
+	
+	<script>
+		function formDate()
+		{
+			var temp = document.getElementById("p_date").value;
+			var temp1 = new Date(temp);
+			p_date = temp1.getDate()+"/";
+			p_date = p_date + temp1.getMonth()+"/";
+			p_date = p_date + temp1.getFullYear();
+			
+			temp = document.getElementById("s_date").value;
+			temp1 = new Date(temp);
+			s_date = temp1.getDate()+"/";
+			s_date = s_date + temp1.getMonth()+"/";
+			s_date = s_date + temp1.getFullYear();
+		}
+		
+		function myFunction() 
+		{
+			formDate();
+			
+			var script = document.getElementById("script").value;
+			var brokerage = parseFloat(document.getElementById("brokerage").value);
+			var p_rate = parseFloat(document.getElementById("p_rate").value);
+			var p_qty = parseFloat(document.getElementById("p_qty").value);
+			var s_rate = parseFloat(document.getElementById("s_rate").value);
+			var s_qty = parseFloat(document.getElementById("s_qty").value);
+			
+			
+			var p_my_brokerage = (p_rate*brokerage/100).toFixed(3);
+			var p_netRate = parseFloat(p_rate)+ parseFloat(p_my_brokerage);
+			var p_sums = (p_netRate*p_qty).toFixed(3);
+			
+			var s_my_brokerage = (s_rate*brokerage/100).toFixed(3);
+			var s_netRate = s_rate - s_my_brokerage;
+			var s_sums = (s_netRate*s_qty).toFixed(3);
+			var sums = (s_sums - p_sums).toFixed(3);
+			
+			var newRow = $("<tr>");
+			var cols = "";
+
+			cols += '<td>' + script + '</td>';
+			cols += '<td class="table-danger">' + p_date + '</td>';
+			cols += '<td class="table-danger">' + p_qty + '</td>';
+			cols += '<td class="table-danger">' + p_rate + '</td>';
+			cols += '<td class="table-danger">' + p_my_brokerage + '</td>';
+			cols += '<td class="table-danger">' + p_netRate + '</td>';
+			cols += '<td class="table-danger">' + p_sums + '</td>';
+			cols += '<td class="table-success">' + s_date + '</td>';
+			cols += '<td class="table-success">' + s_qty + '</td>';
+			cols += '<td class="table-success">' + s_rate + '</td>';
+			cols += '<td class="table-success">' + s_my_brokerage + '</td>';
+			cols += '<td class="table-success">' + s_netRate + '</td>';
+			cols += '<td class="table-success">' + s_sums + '</td>';
+			cols += '<td>' + sums + '</td>';
+			cols += '<td><input type="button" class="ibtnDel btn btn-md btn-danger "  value="Delete"></td>';
+			newRow.append(cols);
+			$("#myTable").append(newRow);
+			
+			
+			$("#myTable").on("click", ".ibtnDel", function (event) 	
+			{
+				$(this).closest("tr").remove();
+			});
+		}
+		
+		
+		function sortTable(n) 
+		{
+		  	var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+		  	table = document.getElementById("myTable");
+		  	switching = true;
+		  	dir = "asc"; 
+		  	while (switching) 
+			{
+				switching = false;
+				rows = table.rows;
+				for (i = 1; i < (rows.length - 1); i++) 
+				{
+					shouldSwitch = false;
+					x = rows[i].getElementsByTagName("TD")[n];
+					y = rows[i + 1].getElementsByTagName("TD")[n];
+					if (dir == "asc") 
+					{
+						if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) 
+						{
+							shouldSwitch= true;
+							break;
+						}
+					} 	
+					else if (dir == "desc") 
+					{
+						if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) 
+						{
+							shouldSwitch = true;
+							break;
+						}
+					}
+				}
+				if (shouldSwitch) 
+				{
+			  		rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+			  		switching = true;
+			  		switchcount ++;      
+				} 
+				else 
+				{
+			  		if (switchcount == 0 && dir == "asc") 
+					{
+						dir = "desc";
+						switching = true;
+			  		}
+				}
+		  	}
+		}
+		
+		function exportTableToExcel(tableID, filename = 'MaheshNagadia')
+		{
+			var downloadLink;
+			var dataType = 'application/vnd.ms-excel';
+			var tableSelect = document.getElementById(tableID);
+			var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+
+			// Specify file name
+			filename = filename?filename+'.xls':'excel_data.xls';
+
+			// Create download link element
+			downloadLink = document.createElement("a");
+
+			document.body.appendChild(downloadLink);
+
+			if(navigator.msSaveOrOpenBlob){
+				var blob = new Blob(['\ufeff', tableHTML], {
+					type: dataType
+				});
+				navigator.msSaveOrOpenBlob( blob, filename);
+			}else{
+				// Create a link to the file
+				downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+
+				// Setting the file name
+				downloadLink.download = filename;
+
+				//triggering the function
+				downloadLink.click();
+			}
+		}
+		
+		function createPDF() 
+		{
+       		var sTable = document.getElementById('myTable').innerHTML;
+
+			var style = "<style>";
+			style = style + "table {width: 100%;font: 17px Calibri;}";
+			style = style + "table, th, td {border: solid 2px #DDD; border-collapse: collapse;";
+			style = style + "padding: 2px 3px;text-align: center;}";
+			style = style + "</style>";
+			
+        	var win = window.open('', '', 'height=700,width=700');
+
+			win.document.write('<html><head>');
+			win.document.write('<title>Profile</title>');   // <title> FOR PDF HEADER.
+			win.document.write(style);          // ADD STYLE INSIDE THE HEAD TAG.
+			win.document.write('</head>');
+			win.document.write('<body>');
+			win.document.write(sTable);         // THE TABLE CONTENTS INSIDE THE BODY TAG.
+			win.document.write('</body></html>');
+
+        	win.document.close(); 	// CLOSE THE CURRENT WINDOW.
+
+       		win.print();    // PRINT THE CONTENTS.
+   		}
+		
+	</script>
+	
+	<!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	
+</body>
+	
+</html>
